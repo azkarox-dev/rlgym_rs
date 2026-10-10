@@ -1,11 +1,32 @@
 use std::io;
 
+#[cfg(feature = "rlviser")]
 use rlviser_rocketsim::ArenaRlviserExt;
 pub use rocketsim;
 use rocketsim::{
     Arena, ArenaEvent, BallState, BoostPadConfig, BoostPadState, CarControls, CarInfo, CarState,
     GameMode, consts,
 };
+
+/// Without the `rlviser` feature, the RLViser methods of `Env` do nothing and report no visualizer.
+#[cfg(not(feature = "rlviser"))]
+trait ArenaRlviserExt {
+    fn set_rlviser_enabled(&mut self, _enabled: bool) -> io::Result<()> {
+        Ok(())
+    }
+    fn handle_rlviser_messages(&mut self) -> io::Result<()> {
+        Ok(())
+    }
+    fn rlviser_paused(&self) -> bool {
+        false
+    }
+    fn rlviser_speed(&self) -> f32 {
+        1.0
+    }
+}
+
+#[cfg(not(feature = "rlviser"))]
+impl ArenaRlviserExt for Arena {}
 
 pub type FullObs = Vec<Vec<f32>>;
 pub type ActionMasks = Vec<Vec<bool>>;

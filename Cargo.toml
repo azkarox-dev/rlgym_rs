@@ -5,8 +5,11 @@ edition = "2024"
 rust-version = "1.95"
 
 [dependencies]
-rlviser-rocketsim = "0.1.0"
+rlviser-rocketsim = { version = "0.1.0", optional = true }
 rocketsim = "0.2.0"
+
+[features]
+rlviser = ["dep:rlviser-rocketsim"]
 
 [dev-dependencies]
 rand = "0.10.1"
